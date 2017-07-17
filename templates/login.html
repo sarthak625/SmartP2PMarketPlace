@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container loginForm-container">
+    <h1>Log In To Your Account!</h1>
+    <form method="post" id='loginForm'>
+      {% csrf_token %}
+      <div class='field'>
+            <label for="username">Username: </label>
+            <input id="username" type="text" name="username" class='form-control' value={{ username }}>
+        </div>
+
+        <div class='field'>
+            <label for="password">Password: </label>
+            <input id="password" type="password" name="password" class='form-control' value={{ password }}>
+        </div>
+
+        <input type="submit" value="Log In" id='logIn'>
+    </form>
+  </div>
+
+{% endblock content %}
