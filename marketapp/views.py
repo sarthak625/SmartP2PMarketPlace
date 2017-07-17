@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.contrib.auth.hashers import make_password
 from datetime import datetime
 from forms import SignUpForm, LoginForm
-from models import UserModel
+from models import UserModel, SessionToken
 from django.contrib.auth.hashers import make_password, check_password
 
 # View to the home page
@@ -47,13 +46,19 @@ def login(request):
 
             if user:
                 if check_password(password, user.password):
-                    print 'User is Valid'
+                    # User is Valid
+                    token   =  SessionToken(user=user)
+                    token.create_token()
+                    token.save()
                 else:
-                    print 'User is not valid'
+                    # User is not valid
+                    print 'Invalid User'
             else:
-                print 'User does not exist'
+                # User does not exist'
+                print 'User doesnt exist'
         else:
-            print 'Form is not Valid'
+            # Form is not Valid
+            print 'Invalid Form'
     else:
         login_form = LoginForm()
 
