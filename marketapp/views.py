@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from datetime import datetime
 from forms import SignUpForm, LoginForm
@@ -65,7 +65,7 @@ def login(request):
                     token   =  SessionToken(user=user)
                     token.create_token()
                     token.save()
-                    response.redirect('/success/')
+                    response = redirect('/feed/')
                     response.set_cookie(key='session_token', value=token.session_token)
                     return response
 
@@ -87,7 +87,7 @@ def login(request):
     return render(request,'login.html', dict)
 
 
-# Check if the current session is valid 
+# Check if the current session is valid
 def check_validation(request):
     if request.COOKIES.get('session_token'):
         session = SessionToken.objects.filter(session_token=request.COOKIES.get('session_token')).first()
@@ -95,3 +95,7 @@ def check_validation(request):
             return session.user
     else:
         return None
+
+# The view user has after logging in
+def feed(request):
+    return render(request,'feed.html')

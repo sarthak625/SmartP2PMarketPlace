@@ -17,11 +17,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from marketapp.views import signup, login, landing
+from marketapp.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', landing),
     url(r'^register/$', signup),
     url(r'^login/$',login),
+    url(r'^feed/$',feed),
 ]
