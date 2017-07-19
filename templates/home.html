@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-  <
+
 
   <div class="container">
     <h1>Welcome</h1>
@@ -10,25 +10,25 @@
     <form method="post">
       {% csrf_token %}
        <div class='field'>
-           <label for="username">Username: </label>
+           <label for="username">Username </label>
            <input id="username" type="text" name="username" class='form-control' value={{ username }}>
        </div>
 
        <div class='field'>
-           <label for="name">Name: </label>
+           <label for="name">Name </label>
            <input id="name" type="text" name="name" value="" class='form-control' value={{ name }}>
        </div>
 
        <div class='field'>
-           <label for="email">Email: </label>
+           <label for="email">Email </label>
            <input id="email" type="text" name="email" value="" class='form-control' value={{ email }}>
        </div>
 
        <div class='field'>
-           <label for="password">Password: </label>
+           <label for="password">Password </label>
            <input id="password" type="password" name="password" value="" class='form-control' value={{ password }}>
        </div>
-           <input type="submit" value="Sign Up" id='signup'>
+           <input type="submit" value="Sign Up" id='signup' class='btn btn-default'>
     </form>
 
   </div>
