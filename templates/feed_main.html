@@ -10,9 +10,15 @@
   <br>
   <div class="thumbnails">
     <img src="{{ post.image_url }}" alt="">
+    <div class="time">
+      {{post.created_on}}
+    </div>
   </div>
+
   {% endfor %}
 
+
+  {% include 'snippets/footer.html'%}
 
 </div>
 {% endblock %}

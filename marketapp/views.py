@@ -187,7 +187,6 @@ def feed(request):
                 post.save()
 
                 return render(request,'feed_new.html',{'post': post})
-                return redirect('/feed/')
         else:
             return redirect('/login/')
     else:

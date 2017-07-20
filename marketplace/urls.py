@@ -24,6 +24,6 @@ urlpatterns = [
     url(r'^$', landing),
     url(r'^register/$', signup),
     url(r'^login/$',login),
-    url(r'^feed/$',feed),
-    url(r'^feed/main$',feed_main),
+    url(r'^post/$',feed),
+    url(r'^feed/$',feed_main),
 ]
