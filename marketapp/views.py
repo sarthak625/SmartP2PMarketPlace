@@ -8,7 +8,17 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 import smtplib
 from email.mime.text import MIMEText as text
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from marketplace.settings import BASE_DIR
+import os
 
+cloudinary.config(
+  cloud_name = "sarthakn",
+  api_key = "262496684599191",
+  api_secret = "W3DeVlkagZImIYWqOggidrGtg2U"
+)
 
 # View to the landing page
 def landing(request):
@@ -158,12 +168,29 @@ def feed(request):
             if form.is_valid():
                 image = form.cleaned_data.get('image')
                 caption = form.cleaned_data.get('caption')
+                # print 'Image saved in the db'
+                # print os.path.join(BASE_DIR,post.image.url)
+
+
 
                 post = PostModel(user=user, image=image, caption=caption)
                 post.save()
-                print 'Image saved in the db'
+
+                path = os.path.join(BASE_DIR,post.image.url)
+
+                uploaded = cloudinary.uploader.upload(path)
+                print uploaded['secure_url']
+
+                post.image_url = uploaded['secure_url']
+                post.save()
+
+                return render(request,'feed_new.html',{'post': post})
                 return redirect('/feed/')
         else:
             return redirect('/login/')
     else:
         return redirect('/')
+
+
+# def feed_main(request):
+    # return render(request,'feed_main.html')

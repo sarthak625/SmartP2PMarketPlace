@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="feed">
-  <h1>Welcome to your feed</h1>
+  <h1>Create your post</h1>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" class='btn btn-default' value='Add a picture'>
+    <input type="submit" class='btn btn-default' id='create_post' value='Add a picture'>
   </form>
 </div>
 {% endblock %}
