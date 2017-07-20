@@ -82,6 +82,14 @@ DATABASES = {
     }
 }
 
+EMAIL_HOST = 'localhost'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+EMAIL_HOST = 'smtp.webfaction.com'
+EMAIL_HOST_USER = 'hekevintran_test'
+EMAIL_HOST_PASSWORD = 'testpass'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

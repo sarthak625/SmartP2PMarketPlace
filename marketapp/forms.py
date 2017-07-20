@@ -1,6 +1,6 @@
 from django.core.exceptions import *
 from django import forms
-from models import UserModel
+from models import UserModel, PostModel
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -41,5 +41,5 @@ class LoginForm(forms.Form):
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model   = UserModel
-        fields  = ['username','password']
+        model   = PostModel
+        fields  = ['image','caption']

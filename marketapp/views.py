@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from datetime import datetime
 from forms import SignUpForm, LoginForm, PostForm
-from models import UserModel, SessionToken
+from models import UserModel, SessionToken, PostModel
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+import smtplib
+from email.mime.text import MIMEText as text
 
 
 # View to the landing page
@@ -30,6 +33,25 @@ def signup(request):
             user = UserModel(name=name, password=make_password(password), email=email, username=username)
             user.save()
 
+            # Send an email to the user on successful sign up
+            # send_email('smartp2pmarketplace.com',
+            #             email,
+            #             'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
+            #             'Welcome')
+            # try:
+            send_mail(
+                    'Welcome',
+                    'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
+                    'smartp2pmarketplace.com',
+                    [email],
+                    fail_silently=False,
+                    )
+            # To prevent header injection https://docs.djangoproject.com/es/1.11/topics/email/#preventing-header-injection
+            # except BadHeaderError:
+                # return HttpResponse('Invalid header found')
+
+
+
             #Show the success page
             return render(request, 'success.html')
         else:
@@ -42,6 +64,21 @@ def signup(request):
     # Render the home page
     return render(request,'home.html',{'signup_form': signup_form})
 
+
+# def send_email(sender,receiver,message,subject):
+#     sender = sender
+#     receivers = receiver
+#     m = text(message)
+#     m['Subject'] = subject
+#     m['From'] = sender
+#     m['To'] = receiver
+#     # message = message
+#     try:
+#         smtpObj = smtplib.SMTP('localhost')
+#         smtpObj.sendmail(sender, receivers, str(m))
+#         print "Successfully sent email"
+#     except smtplib.SMTPException:
+#         print "Error: unable to send email"
 
 # View for the login page
 
@@ -124,6 +161,8 @@ def feed(request):
 
                 post = PostModel(user=user, image=image, caption=caption)
                 post.save()
+                print 'Image saved in the db'
+                return redirect('/feed/')
         else:
             return redirect('/login/')
     else:

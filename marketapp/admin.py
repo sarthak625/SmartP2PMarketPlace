@@ -1,5 +1,6 @@
 from django.contrib import admin
-from models import UserModel
+from models import UserModel, PostModel
 
-# Register your models here.
+# Registered models to view on /admin
 admin.site.register(UserModel)
+admin.site.register(PostModel)
