@@ -54,8 +54,6 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            print username
-            print password
             user     = UserModel.objects.filter(username=username).first()
 
             if user:
@@ -97,5 +95,26 @@ def check_validation(request):
         return None
 
 # The view user has after logging in
+# def feed(request):
+#     return render(request,'feed.html')
+
+
+# Post View
+ # def post_view(request):
 def feed(request):
-    return render(request,'feed.html')
+     user = check_validation(request)
+
+     if user:
+         if request.method == 'GET':
+             form = PostForm()
+             return render (request, 'post.html', {'form': form})
+         elif request.method == 'POST':
+             form = PostForm(request.POST, request.FILES)
+             if form.is_valid():
+                 image = form.cleaned_data.get('image')
+                 caption = form.cleaned_data.get('caption')
+
+                 post = PostModel(user=user, image=image, caption=caption)
+                 post.save()
+         else:
+             return redirect('/login/')
