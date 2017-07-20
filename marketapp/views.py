@@ -126,18 +126,19 @@ def login(request):
                 else:
                     # User is not valid
                     print 'Invalid User'
-                    dict['message'] = 'Incorrect Password !! Please try again !'
+                    return render(request,'login.html',{'context': 'Your password is not correct! Try Again!'})
             else:
                 # User does not exist'
                 print 'User doesnt exist'
+                return render(request,'login.html',{'context': 'Username not registered'})
         else:
             # Form is not Valid
             print 'Invalid Form'
+            return render(request,'login.html',{'context': 'Could not log you in. Please fill all the fields correctly'})
     else:
         form = LoginForm()
 
-    dict['form'] = form
-    return render(request,'login.html', dict)
+    return render(request,'login.html')
 
 
 # Check if the current session is valid
@@ -165,6 +166,7 @@ def feed(request):
             return render (request, 'feed.html', {'form': form})
         elif request.method == 'POST':
             form = PostForm(request.POST, request.FILES)
+
             if form.is_valid():
                 image = form.cleaned_data.get('image')
                 caption = form.cleaned_data.get('caption')
@@ -189,7 +191,8 @@ def feed(request):
         else:
             return redirect('/login/')
     else:
-        return redirect('/')
+        # If the user is not logged in
+        return redirect('/login')
 
 
 # def feed_main(request):

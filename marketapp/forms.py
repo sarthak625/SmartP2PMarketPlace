@@ -35,7 +35,6 @@ class SignUpForm(forms.ModelForm):
 #         fields = ['username','password']
 
 class LoginForm(forms.Form):
-
     username    = forms.CharField(max_length=120)
     password    = forms.CharField(max_length=40)
 

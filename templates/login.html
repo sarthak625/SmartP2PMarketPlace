@@ -6,6 +6,9 @@
     <hr>
     <form method="POST" id='loginForm'>
       {% csrf_token %}
+      <div class="error-container" id='errors'>
+          <h4 style='color: white' id='error-text'>{{ context }}</h2>
+      </div>
       <div class='field'>
             <label for="username">Username </label>
             <input id="username" type="text" name="username" class='form-control' }>
