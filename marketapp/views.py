@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from datetime import datetime
 from forms import SignUpForm, LoginForm
@@ -43,20 +43,19 @@ def signup(request):
 def login(request):
 
     dict = {}
+
     if request.method == 'POST':
-        form = LoginForm(data=request.POST)
-        # username = form.cleaned_data.get('username')
-        # password = form.cleaned_data.get('password')
-        # print username
-        # print password
-        print form
+
+        import pdb
+        pdb.set_trace()
+
+        form = LoginForm(request.POST)
 
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            print username
-            print password
-            user     = UserModel.objects.filter(username=username).first()
+
+            user = UserModel.objects.filter(username=username).first()
 
             if user:
                 if check_password(password, user.password):
@@ -65,7 +64,7 @@ def login(request):
                     token   =  SessionToken(user=user)
                     token.create_token()
                     token.save()
-                    response.redirect('/success/')
+                    response = redirect('/success/')
                     response.set_cookie(key='session_token', value=token.session_token)
                     return response
 
