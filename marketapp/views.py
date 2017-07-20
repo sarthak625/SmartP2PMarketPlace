@@ -192,8 +192,15 @@ def feed(request):
             return redirect('/login/')
     else:
         # If the user is not logged in
-        return redirect('/login')
+        return redirect('/login/')
 
 
-# def feed_main(request):
-    # return render(request,'feed_main.html')
+def feed_main(request):
+    user = check_validation(request)
+
+    if user:
+        # posts = PostModel.objects.all().order_by('created_on')
+        posts = PostModel.objects.all().order_by('-created_on')
+        return render(request,'feed_main.html',{'posts': posts})
+    else:
+        return redirect('/login/')
