@@ -47,3 +47,8 @@ class LikeForm(forms.ModelForm):
     class Meta:
         model   = LikeModel
         fields  = ['post']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model   = CommentModel
+        fields  = ['comment_text','post']

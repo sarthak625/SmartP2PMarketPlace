@@ -1,5 +1,6 @@
 {% extends 'base2.html' %}
 {% block content %}
+
 <div class="feed">
   {% for post in posts %}
   <h3>{{ post.user.username }}</h3>
@@ -13,6 +14,7 @@
     <div class="time">
       {{post.created_on}}
     </div>
+
     <div class="like">
       <form method="post" action='/like/'>
         {% csrf_token %}
@@ -28,6 +30,33 @@
         {{ post.like_count }} likes
 
       </div>
+    </div>
+
+    <div class='comment'>
+
+      {% for comment in post.comments %}
+
+        <p>
+          <div class="username">
+              {{ comment.user.username }} <span class='created_on'>&nbsp;[{{ comment.created_on }}]</span>
+          </div>
+          <span class='comment-text'>{{ comment.comment_text }}</span>
+
+        </p>
+
+      {% endfor %}
+
+      </div>
+
+    <div class="make-a-comment">
+      <form method="POST" action="/comment/">
+        {% csrf_token %}
+        <input type="hidden" name="post" value="{{ post.id }}" >
+        <input type="text" class='form-control' name="comment_text" id="comment_text" placeholder="Press enter to send a comment" value="{{ comment_text }}">
+        {# {{ comment_text }} #}
+        <input type="submit" class="btn-default btn comment_button" value="Comment">
+      </form>
+
     </div>
   </div>
 

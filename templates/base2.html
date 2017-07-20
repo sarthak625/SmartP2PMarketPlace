@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Welcome</title>
     {% include 'snippets/css.html' %}
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js'></script>
   </head>
   <body>
     <div class='main'>
@@ -18,7 +19,7 @@
                   </button>
                   <ul class='nav navbar-nav'>
                     <li><a class="navbar-brand active" id='brand-name' href="/"><i class="fa fa-camera-retro" aria-hidden="true"></i> P2P MarketPlace</a></li>
-                    <li><a href="/post/"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></li>
+                    <li class='active'><a href="/post/">New Post <i class="fa fa-plus-circle" aria-hidden="true"></i></a></li>
                   </ul>
 
                 </div>
@@ -38,7 +39,7 @@
       {% endblock content %}
     </div>
 
-    
+
   </body>
   {% include 'snippets/scripts.html' %}
 </html>

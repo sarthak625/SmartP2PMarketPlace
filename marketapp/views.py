@@ -207,13 +207,13 @@ def feed_main(request):
             if existing_like:
                 post.has_liked = True
 
+
         return render(request,'feed_main.html',{'posts': posts})
     else:
         return redirect('/login/')
 
 # Like view
-def like_view(request):
-
+def like(request):
     user = check_validation(request)
     if user and request.method=='POST':
         form = LikeForm(request.POST)
@@ -227,7 +227,50 @@ def like_view(request):
                 existing_like.delete()
             else:
                 # Otherwise create a like
-                LikeModel.objects.create(post_id=post_id, user=user)
+                post = LikeModel.objects.create(post_id=post_id, user=user)
+
+                # Send email if the one who liked was someone other than the
+                # one who posted the comment
+                if post.user.email != post.post.user.email:
+                    send_mail(
+                        'Heyy, You got a like from '+post.user.name,
+                        'Check it out at smartp2pmarketplace.com',
+                        'smartp2pmarketplace.com',
+                        [post.post.user.email],
+                        fail_silently=False,
+                        )
+
             return redirect('/feed/')
     else:
         return redirect('/login/')
+
+# Comment View
+def comment(request):
+    user = check_validation(request)
+
+    if user and request.method=='POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            post_id = form.cleaned_data.get('post').id
+            comment_text = form.cleaned_data.get('comment_text')
+
+            # Create a CommentModel object and save it in the database
+            comment = CommentModel.objects.create(user=user, post_id=post_id, comment_text=comment_text)
+            comment.save()
+
+            # Send email if the one who liked was someone other than the
+            # one who posted the comment
+            if comment.user.email != comment.post.user.email:
+                send_mail(
+                    'Heyy, You got a comment from '+comment.user.name,
+                    'Check it out at smartp2pmarketplace.com',
+                    'smartp2pmarketplace.com',
+                    [comment.post.user.email],
+                    fail_silently=False,
+                    )
+
+            return redirect('/feed')
+        else:
+            return redirect('/feed/')
+    else:
+        return redirect('/login')
