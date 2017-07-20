@@ -13,6 +13,22 @@
     <div class="time">
       {{post.created_on}}
     </div>
+    <div class="like">
+      <form method="post" action='/like/'>
+        {% csrf_token %}
+        <input type="hidden" name="post" value="{{ post.id }}">
+        {% if post.has_liked %}
+          <button class="btn btn-default">Unlike <i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+        {% else %}
+          <button class="btn btn-default">Like <i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+        {% endif %}
+      </form>
+
+      <div class='like-count' style='display: inline-block'>
+        {{ post.like_count }} likes
+
+      </div>
+    </div>
   </div>
 
   {% endfor %}

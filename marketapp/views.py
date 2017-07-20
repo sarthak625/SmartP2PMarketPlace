@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from datetime import datetime
-from forms import SignUpForm, LoginForm, PostForm
-from models import UserModel, SessionToken, PostModel
+from forms import *
+from models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
@@ -193,13 +193,41 @@ def feed(request):
         # If the user is not logged in
         return redirect('/login/')
 
-
+# Main feed View
 def feed_main(request):
+    # Validates if the user is logged in or not
     user = check_validation(request)
 
     if user:
         # posts = PostModel.objects.all().order_by('created_on')
         posts = PostModel.objects.all().order_by('-created_on')
+
+        for post in posts:
+            existing_like = LikeModel.objects.filter(post_id=post.id, user=user).first()
+            if existing_like:
+                post.has_liked = True
+
         return render(request,'feed_main.html',{'posts': posts})
+    else:
+        return redirect('/login/')
+
+# Like view
+def like_view(request):
+
+    user = check_validation(request)
+    if user and request.method=='POST':
+        form = LikeForm(request.POST)
+
+        if form.is_valid():
+            post_id = form.cleaned_data.get('post').id
+            existing_like = LikeModel.objects.filter(post_id=post_id, user=user).first()
+
+            # If user has already registered a like, then delete it
+            if existing_like:
+                existing_like.delete()
+            else:
+                # Otherwise create a like
+                LikeModel.objects.create(post_id=post_id, user=user)
+            return redirect('/feed/')
     else:
         return redirect('/login/')

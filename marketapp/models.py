@@ -12,7 +12,7 @@ class UserModel(models.Model):
     created_on      = models.DateTimeField(auto_now_add=True)
     updated_on      = models.DateTimeField(auto_now=True)
 
-    
+
 
 class SessionToken(models.Model):
     user            = models.ForeignKey(UserModel)
@@ -28,5 +28,16 @@ class PostModel(models.Model):
     image           = models.FileField(upload_to='user_images')
     image_url       = models.CharField(max_length=255)
     caption         = models.CharField(max_length=240)
+    created_on      = models.DateTimeField(auto_now_add=True)
+    updated_on      = models.DateTimeField(auto_now=True)
+    has_liked       = False
+
+    @property
+    def like_count(self):
+        return len(LikeModel.objects.filter(post=self))
+
+class LikeModel(models.Model):
+    user            = models.ForeignKey(UserModel)
+    post            = models.ForeignKey(PostModel)
     created_on      = models.DateTimeField(auto_now_add=True)
     updated_on      = models.DateTimeField(auto_now=True)
