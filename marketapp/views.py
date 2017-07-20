@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from datetime import datetime
-from forms import SignUpForm, LoginForm
+from forms import SignUpForm, LoginForm, PostForm
 from models import UserModel, SessionToken
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import ValidationError
+
 
 # View to the landing page
 def landing(request):
@@ -30,6 +32,9 @@ def signup(request):
 
             #Show the success page
             return render(request, 'success.html')
+        else:
+            print 'Error occured while signing up'
+            return render(request,'home.html',{'context': signup_form.errors})
 
     else:
         signup_form = SignUpForm()
@@ -45,9 +50,6 @@ def login(request):
     dict = {}
 
     if request.method == 'POST':
-
-        import pdb
-        pdb.set_trace()
 
         form = LoginForm(request.POST)
 
@@ -68,7 +70,7 @@ def login(request):
 
 
 
-                    response = redirect('/success/')
+                    response = redirect('/feed/')
 
                     response.set_cookie(key='session_token', value=token.session_token)
                     return response
@@ -106,21 +108,23 @@ def check_validation(request):
 
 
 # Post View
- # def post_view(request):
+# def post_view(request):
 def feed(request):
-     user = check_validation(request)
+    user = check_validation(request)
 
-     if user:
-         if request.method == 'GET':
-             form = PostForm()
-             return render (request, 'post.html', {'form': form})
-         elif request.method == 'POST':
-             form = PostForm(request.POST, request.FILES)
-             if form.is_valid():
-                 image = form.cleaned_data.get('image')
-                 caption = form.cleaned_data.get('caption')
+    if user:
+        if request.method == 'GET':
+            form = PostForm()
+            return render (request, 'feed.html', {'form': form})
+        elif request.method == 'POST':
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                image = form.cleaned_data.get('image')
+                caption = form.cleaned_data.get('caption')
 
-                 post = PostModel(user=user, image=image, caption=caption)
-                 post.save()
-         else:
-             return redirect('/login/')
+                post = PostModel(user=user, image=image, caption=caption)
+                post.save()
+        else:
+            return redirect('/login/')
+    else:
+        return redirect('/')
