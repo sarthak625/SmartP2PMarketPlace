@@ -1,7 +1,5 @@
-<<<<<<< HEAD
-=======
-from models import UserModel
->>>>>>> 610eb4db31b286572f3fda85600ebd0c829fa794
+
+
 from django import forms
 from models import UserModel
 
