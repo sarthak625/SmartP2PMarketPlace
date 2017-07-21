@@ -13,12 +13,38 @@ import cloudinary.uploader
 import cloudinary.api
 from marketplace.settings import BASE_DIR
 import os
+import sendgrid
+from sendgrid.helpers.mail import *
 
 cloudinary.config(
   cloud_name = "sarthakn",
   api_key = "262496684599191",
   api_secret = "W3DeVlkagZImIYWqOggidrGtg2U"
 )
+
+sendgrid_key = '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'
+my_client = sendgrid.SendGridAPIClient(apikey=sendgrid_key)
+
+def create_payload(subject,message,email):
+    from_email = "jsparrow725@gmail.com"
+    from_name = "Smart P2P Marketplace"
+
+    payload = {
+            "personalizations":[{
+                "to":[{"email":email }],
+                "subject": subject
+            }],
+            "from": {
+                "email": from_email,
+                "name": from_name
+            },
+            "content": [{
+                "type":"text/html",
+                "value": message
+            }]
+        }
+    return payload
+
 
 # View to the landing page
 def landing(request):
@@ -44,23 +70,24 @@ def signup(request):
             user.save()
 
             # Send an email to the user on successful sign up
-            # send_email('smartp2pmarketplace.com',
-            #             email,
-            #             'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
-            #             'Welcome')
-            # try:
-            send_mail(
-                    'Welcome',
-                    'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
-                    'smartp2pmarketplace.com',
-                    [email],
-                    fail_silently=False,
-                    )
+
+            subject = "Welcome"
+            message = "Welcome to SmartP2PMarketplace. :)"
+            payload = create_payload(subject,message,email)
+            response = my_client.client.mail.send.post(request_body=payload)
+            print response
+
+            # Alternative
+            # send_mail(
+            #         'Welcome',
+            #         'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
+            #         'smartp2pmarketplace.com',
+            #         [email],
+            #         fail_silently=False,
+            #         )
             # To prevent header injection https://docs.djangoproject.com/es/1.11/topics/email/#preventing-header-injection
             # except BadHeaderError:
-                # return HttpResponse('Invalid header found')
-
-
+                # return HttpResponse('Invalid header found'
 
             #Show the success page
             return render(request, 'success.html')
@@ -74,21 +101,6 @@ def signup(request):
     # Render the home page
     return render(request,'home.html',{'signup_form': signup_form})
 
-
-# def send_email(sender,receiver,message,subject):
-#     sender = sender
-#     receivers = receiver
-#     m = text(message)
-#     m['Subject'] = subject
-#     m['From'] = sender
-#     m['To'] = receiver
-#     # message = message
-#     try:
-#         smtpObj = smtplib.SMTP('localhost')
-#         smtpObj.sendmail(sender, receivers, str(m))
-#         print "Successfully sent email"
-#     except smtplib.SMTPException:
-#         print "Error: unable to send email"
 
 # View for the login page
 
@@ -199,7 +211,6 @@ def feed_main(request):
     user = check_validation(request)
 
     if user:
-        # posts = PostModel.objects.all().order_by('created_on')
         posts = PostModel.objects.all().order_by('-created_on')
 
         for post in posts:
@@ -211,6 +222,9 @@ def feed_main(request):
         return render(request,'feed_main.html',{'posts': posts})
     else:
         return redirect('/login/')
+
+
+
 
 # Like view
 def like(request):
@@ -231,14 +245,23 @@ def like(request):
 
                 # Send email if the one who liked was someone other than the
                 # one who posted the comment
+
                 if post.user.email != post.post.user.email:
-                    send_mail(
-                        'Heyy, You got a like from '+post.user.name,
-                        'Check it out at smartp2pmarketplace.com',
-                        'smartp2pmarketplace.com',
-                        [post.post.user.email],
-                        fail_silently=False,
-                        )
+                    subject = "You got a like"
+                    message = 'Heyy, You got a like from '+post.user.name
+                    email = post.post.user.email
+                    payload = create_payload(subject,message,email)
+                    response = my_client.client.mail.send.post(request_body=payload)
+                    print response
+
+                    # Alternative
+                    # send_mail(
+                    #     'Heyy, You got a like from '+post.user.name,
+                    #     'Check it out at smartp2pmarketplace.com',
+                    #     'smartp2pmarketplace.com',
+                    #     [post.post.user.email],
+                    #     fail_silently=False,
+                    #     )
 
             return redirect('/feed/')
     else:
@@ -261,13 +284,20 @@ def comment(request):
             # Send email if the one who liked was someone other than the
             # one who posted the comment
             if comment.user.email != comment.post.user.email:
-                send_mail(
-                    'Heyy, You got a comment from '+comment.user.name,
-                    'Check it out at smartp2pmarketplace.com',
-                    'smartp2pmarketplace.com',
-                    [comment.post.user.email],
-                    fail_silently=False,
-                    )
+                subject = "You got a comment"
+                message = 'Heyy, You got a comment from '+comment.user.name
+                email = comment.post.user.email
+                payload = create_payload(subject,message,email)
+                response = my_client.client.mail.send.post(request_body=payload)
+                print response
+
+                # send_mail(
+                #     'Heyy, You got a comment from '+comment.user.name,
+                #     'Check it out at smartp2pmarketplace.com',
+                #     'smartp2pmarketplace.com',
+                #     [comment.post.user.email],
+                #     fail_silently=False,
+                #     )
 
             return redirect('/feed')
         else:

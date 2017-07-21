@@ -52,7 +52,7 @@
       <form method="POST" action="/comment/">
         {% csrf_token %}
         <input type="hidden" name="post" value="{{ post.id }}" >
-        <input type="text" class='form-control' name="comment_text" id="comment_text" placeholder="Press enter to send a comment" value="{{ comment_text }}">
+        <input type="text" class='form-control' name="comment_text" id="comment_text" placeholder="Type here to send a comment" value="{{ comment_text }}">
         {# {{ comment_text }} #}
         <input type="submit" class="btn-default btn comment_button" value="Comment">
       </form>
