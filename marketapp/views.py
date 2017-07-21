@@ -15,13 +15,20 @@ from marketplace.settings import BASE_DIR
 import os
 import sendgrid
 from sendgrid.helpers.mail import *
+from clarifai.rest import ClarifaiApp
 
+# Set up clarifai and define a model
+app = ClarifaiApp(api_key='ed1ac180867148ca9be44989cbb4643f')
+model = app.models.get('general-v1.3')
+
+# Set up cloudinary
 cloudinary.config(
   cloud_name = "sarthakn",
   api_key = "262496684599191",
   api_secret = "W3DeVlkagZImIYWqOggidrGtg2U"
 )
 
+# Set up SendGrid
 sendgrid_key = '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'
 my_client = sendgrid.SendGridAPIClient(apikey=sendgrid_key)
 
@@ -215,6 +222,22 @@ def feed_main(request):
 
         for post in posts:
             existing_like = LikeModel.objects.filter(post_id=post.id, user=user).first()
+
+
+            url = post.image_url
+            # try:
+            response = model.predict_by_url(url=url)
+            # print response
+            for output in response['outputs']:
+                print '========================'
+
+                for concept in output['data']['concepts']:
+                    print concept['name']
+                # print url
+            # except:
+            #     print 'Api Error'
+
+            # If user has liked the post set the boolean value to True
             if existing_like:
                 post.has_liked = True
 
