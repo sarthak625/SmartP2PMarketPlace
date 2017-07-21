@@ -16,6 +16,10 @@ import os
 import sendgrid
 from sendgrid.helpers.mail import *
 from clarifai.rest import ClarifaiApp
+import json
+from datetime import datetime
+
+jsonDec = json.decoder.JSONDecoder()
 
 # Set up clarifai and define a model
 app = ClarifaiApp(api_key='ed1ac180867148ca9be44989cbb4643f')
@@ -199,11 +203,34 @@ def feed(request):
 
                 path = os.path.join(BASE_DIR,post.image.url)
 
+                #Upload to cloudinary API
                 uploaded = cloudinary.uploader.upload(path)
                 print uploaded['secure_url']
 
                 post.image_url = uploaded['secure_url']
                 post.save()
+
+                # try:
+                response = model.predict_by_url(url=uploaded['secure_url'])
+                # tags = []
+                # # print response
+                # for output in response['outputs']:
+                #     print '========================'
+                #
+                #     for concept in output['data']['concepts']:
+                #         print concept['name']
+                #         tags.append(concept['name'])
+                #     # print url
+                # # except:
+                # #     print 'Api Error'
+                # post.tags = json.dumps(tags)
+                # print post.tags
+                # post.save()
+
+                tags = response["outputs"][0]["data"]["concepts"][0]["name"]
+                post.tags = tags
+                post.save()
+
 
                 return render(request,'feed_new.html',{'post': post})
         else:
@@ -223,26 +250,36 @@ def feed_main(request):
         for post in posts:
             existing_like = LikeModel.objects.filter(post_id=post.id, user=user).first()
 
-
             url = post.image_url
             # try:
-            response = model.predict_by_url(url=url)
-            # print response
-            for output in response['outputs']:
-                print '========================'
 
-                for concept in output['data']['concepts']:
-                    print concept['name']
-                # print url
-            # except:
-            #     print 'Api Error'
+            response = model.predict_by_url(url=url)
+
+            # Categorize on the basis of tags
+            # print response
+            if post.tags == None:
+                for output in response['outputs']:
+                    print '========================'
+
+                    for concept in output['data']['concepts']:
+                        print concept['name']
+                        if post.tags == None:
+                            post.tags = str(concept['name'])+' , '
+                        else:
+                            post.tags = str(post.tags)+str(concept['name'])+' , '
+                        post.save()
+                    # print url
+                # except:
+                #     print 'Api Error'
 
             # If user has liked the post set the boolean value to True
             if existing_like:
                 post.has_liked = True
 
 
-        return render(request,'feed_main.html',{'posts': posts})
+        return render(request,'feed_main.html',{
+            'posts': posts
+        })
     else:
         return redirect('/login/')
 
@@ -327,3 +364,14 @@ def comment(request):
             return redirect('/feed/')
     else:
         return redirect('/login')
+
+
+# View to log the user out
+def logout(request):
+    user = check_validation(request)
+    if user:
+        token = SessionToken(user=user)
+        token.delete()
+        return redirect('/')
+    else:
+        return redirect('/feed/')

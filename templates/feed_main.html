@@ -46,6 +46,7 @@
 
       {% endfor %}
 
+
       </div>
 
     <div class="make-a-comment">
@@ -58,12 +59,19 @@
       </form>
 
     </div>
+    <h4 style='color: #f45641'>TAGS</h4>
+    <div class="tags" style='color: #acf441'>
+        {{ post.tags }}
+    </div>
   </div>
 
+
+
+
+
   {% endfor %}
-
-
   {% include 'snippets/footer.html'%}
+
 
 </div>
 {% endblock %}

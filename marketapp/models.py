@@ -23,6 +23,13 @@ class SessionToken(models.Model):
     def create_token(self):
         self.session_token = uuid.uuid4()
 
+    def delete(self):
+        d = self.user.id
+        SessionToken.objects.get(id__exact=d).delete()
+        # self.user.id = None
+        self.is_valid = False
+        self.session_token = ''
+
 class PostModel(models.Model):
     user            = models.ForeignKey(UserModel)
     image           = models.FileField(upload_to='user_images')
@@ -30,6 +37,7 @@ class PostModel(models.Model):
     caption         = models.CharField(max_length=240)
     created_on      = models.DateTimeField(auto_now_add=True)
     updated_on      = models.DateTimeField(auto_now=True)
+    tags            = models.TextField(null=True)
     has_liked       = False
 
     @property
@@ -49,6 +57,7 @@ class LikeModel(models.Model):
 class CommentModel(models.Model):
     user            = models.ForeignKey(UserModel)
     post            = models.ForeignKey(PostModel)
+    # likes           = models.ForeignKey(LikeModel)
     comment_text    = models.CharField(max_length=555)
     created_on      = models.DateTimeField(auto_now_add=True)
     updated_on      = models.DateTimeField(auto_now=True)
