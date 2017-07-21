@@ -32,3 +32,13 @@ Go to the root directory(make sure you have your virtual environment enabled) an
 ## Screenshots
 
 Here is the website in action:
+
+[![solarized dualmode](https://github.com/sarthak625/SmartP2PMarketPlace/blob/master/screenshots/sm_sc_1.png)](#features)
+
+[![solarized dualmode](https://github.com/sarthak625/SmartP2PMarketPlace/blob/master/screenshots/sm_sc_2.png)](#features)
+
+[![solarized dualmode](https://github.com/sarthak625/SmartP2PMarketPlace/blob/master/screenshots/sm_sc_3.png)](#features)
+
+[![solarized dualmode](https://github.com/sarthak625/SmartP2PMarketPlace/blob/master/screenshots/sm_sc_4.png)](#features)
+
+[![solarized dualmode](https://github.com/sarthak625/SmartP2PMarketPlace/blob/master/screenshots/sm_sc_5.png)](#features)
