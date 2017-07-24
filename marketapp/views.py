@@ -82,20 +82,20 @@ def signup(request):
 
             # Send an email to the user on successful sign up
 
-            subject = "Welcome"
-            message = "Welcome to SmartP2PMarketplace. :)"
-            payload = create_payload(subject,message,email)
-            response = my_client.client.mail.send.post(request_body=payload)
-            print response
+            # subject = "Welcome"
+            # message = "Welcome to SmartP2PMarketplace. :)"
+            # payload = create_payload(subject,message,email)
+            # response = my_client.client.mail.send.post(request_body=payload)
+            # print response
 
             # Alternative
-            # send_mail(
-            #         'Welcome',
-            #         'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
-            #         'smartp2pmarketplace.com',
-            #         [email],
-            #         fail_silently=False,
-            #         )
+            send_mail(
+                    'Welcome',
+                    'Thanks for being a part of my Smart P2P Marketplace. You are awesome :)',
+                    'smartp2pmarketplace.com',
+                    [email],
+                    fail_silently=False,
+                    )
             # To prevent header injection https://docs.djangoproject.com/es/1.11/topics/email/#preventing-header-injection
             # except BadHeaderError:
                 # return HttpResponse('Invalid header found'
@@ -211,23 +211,11 @@ def feed(request):
                 post.save()
 
                 # try:
-                response = model.predict_by_url(url=uploaded['secure_url'])
-                # tags = []
-                # # print response
-                # for output in response['outputs']:
-                #     print '========================'
-                #
-                #     for concept in output['data']['concepts']:
-                #         print concept['name']
-                #         tags.append(concept['name'])
-                #     # print url
-                # # except:
-                # #     print 'Api Error'
-                # post.tags = json.dumps(tags)
-                # print post.tags
-                # post.save()
+                # response = model.predict_by_url(url=uploaded['secure_url'])
 
-                tags = response["outputs"][0]["data"]["concepts"][0]["name"]
+
+                # tags = response["outputs"][0]["data"]["concepts"][0]["name"]
+                tags = []
                 post.tags = tags
                 post.save()
 
@@ -253,21 +241,21 @@ def feed_main(request):
             url = post.image_url
             # try:
 
-            response = model.predict_by_url(url=url)
+            # response = model.predict_by_url(url=url)
 
             # Categorize on the basis of tags
             # print response
-            if post.tags == None:
-                for output in response['outputs']:
-                    print '========================'
-
-                    for concept in output['data']['concepts']:
-                        print concept['name']
-                        if post.tags == None:
-                            post.tags = str(concept['name'])+' , '
-                        else:
-                            post.tags = str(post.tags)+str(concept['name'])+' , '
-                        post.save()
+            # if post.tags == None:
+            #     for output in response['outputs']:
+            #         print '========================'
+            #
+            #         for concept in output['data']['concepts']:
+            #             print concept['name']
+            #             if post.tags == None:
+            #                 post.tags = str(concept['name'])+' , '
+            #             else:
+            #                 post.tags = str(post.tags)+str(concept['name'])+' , '
+            #             post.save()
                     # print url
                 # except:
                 #     print 'Api Error'
@@ -307,21 +295,21 @@ def like(request):
                 # one who posted the comment
 
                 if post.user.email != post.post.user.email:
-                    subject = "You got a like"
-                    message = 'Heyy, You got a like from '+post.user.name
-                    email = post.post.user.email
-                    payload = create_payload(subject,message,email)
-                    response = my_client.client.mail.send.post(request_body=payload)
-                    print response
+                    # subject = "You got a like"
+                    # message = 'Heyy, You got a like from '+post.user.name
+                    # email = post.post.user.email
+                    # payload = create_payload(subject,message,email)
+                    # response = my_client.client.mail.send.post(request_body=payload)
+                    # print response
 
                     # Alternative
-                    # send_mail(
-                    #     'Heyy, You got a like from '+post.user.name,
-                    #     'Check it out at smartp2pmarketplace.com',
-                    #     'smartp2pmarketplace.com',
-                    #     [post.post.user.email],
-                    #     fail_silently=False,
-                    #     )
+                    send_mail(
+                        'Heyy, You got a like from '+post.user.name,
+                        'Check it out at smartp2pmarketplace.com',
+                        'smartp2pmarketplace.com',
+                        [post.post.user.email],
+                        fail_silently=False,
+                        )
 
             return redirect('/feed/')
     else:
@@ -344,20 +332,20 @@ def comment(request):
             # Send email if the one who liked was someone other than the
             # one who posted the comment
             if comment.user.email != comment.post.user.email:
-                subject = "You got a comment"
-                message = 'Heyy, You got a comment from '+comment.user.name
-                email = comment.post.user.email
-                payload = create_payload(subject,message,email)
-                response = my_client.client.mail.send.post(request_body=payload)
-                print response
+                # subject = "You got a comment"
+                # message = 'Heyy, You got a comment from '+comment.user.name
+                # email = comment.post.user.email
+                # payload = create_payload(subject,message,email)
+                # response = my_client.client.mail.send.post(request_body=payload)
+                # print response
 
-                # send_mail(
-                #     'Heyy, You got a comment from '+comment.user.name,
-                #     'Check it out at smartp2pmarketplace.com',
-                #     'smartp2pmarketplace.com',
-                #     [comment.post.user.email],
-                #     fail_silently=False,
-                #     )
+                send_mail(
+                    'Heyy, You got a comment from '+comment.user.name,
+                    'Check it out at smartp2pmarketplace.com',
+                    'smartp2pmarketplace.com',
+                    [comment.post.user.email],
+                    fail_silently=False,
+                    )
 
             return redirect('/feed')
         else:

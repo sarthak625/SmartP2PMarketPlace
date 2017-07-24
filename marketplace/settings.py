@@ -83,14 +83,12 @@ DATABASES = {
     }
 }
 
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'sarthakn18'
+EMAIL_HOST_PASSWORD = 'gots7isawesome'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False
-EMAIL_HOST = 'smtp.webfaction.com'
-EMAIL_HOST_USER = 'hekevintran_test'
-EMAIL_HOST_PASSWORD = 'testpass'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
