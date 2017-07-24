@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^post/$',feed),
     url(r'^feed/$',feed_main),
     url(r'^like/$',like),
+    url(r'^upvote/',upvote),
     url(r'^comment/$',comment),
     url(r'^logout/$', logout)
 ]

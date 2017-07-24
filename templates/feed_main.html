@@ -39,8 +39,26 @@
         <p>
           <div class="username">
               {{ comment.user.username }} <span class='created_on'>&nbsp;[{{ comment.created_on }}]</span>
+              <br>
+              <span class='comment-text'>{{ comment.comment_text }}</span>
+              <div class="upvote">
+                <form method="post" action='/upvote/'>
+                  {% csrf_token %}
+                  <input type="hidden" name="comment" value="{{ comment.id }}">
+                  {% if comment.has_upvoted %}
+                    <button class="btn btn-default btn-upvote">Downvote <i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+                  {% else %}
+                    <button class="btn btn-default btn-upvote">Upvote <i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>
+                  {% endif %}
+                </form>
+
+                <div class='like-count' style='display: inline-block'>
+                  {{ comment.upvote_count }} Upvotes
+
+                </div>
+              </div>
           </div>
-          <span class='comment-text'>{{ comment.comment_text }}</span>
+
 
         </p>
 
@@ -59,9 +77,11 @@
       </form>
 
     </div>
-    <h4 style='color: #f45641'>TAGS</h4>
+    <h4 style='color: #f45641'>CATEGORY</h4>
     <div class="tags" style='color: #acf441'>
-        {{ post.tags }}
+        <div class="tag">
+          {{ post.tags }}
+        </div>
     </div>
   </div>
 

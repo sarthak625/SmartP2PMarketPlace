@@ -22,7 +22,7 @@ from datetime import datetime
 jsonDec = json.decoder.JSONDecoder()
 
 # Set up clarifai and define a model
-app = ClarifaiApp(api_key='ed1ac180867148ca9be44989cbb4643f')
+app = ClarifaiApp(api_key='a5699f1619f846f49ad15953f6edc724')
 model = app.models.get('general-v1.3')
 
 # Set up cloudinary
@@ -193,14 +193,11 @@ def feed(request):
             if form.is_valid():
                 image = form.cleaned_data.get('image')
                 caption = form.cleaned_data.get('caption')
-                # print 'Image saved in the db'
-                # print os.path.join(BASE_DIR,post.image.url)
-
-
 
                 post = PostModel(user=user, image=image, caption=caption)
                 post.save()
 
+                # print 'Image saved in the db'
                 path = os.path.join(BASE_DIR,post.image.url)
 
                 #Upload to cloudinary API
@@ -211,11 +208,11 @@ def feed(request):
                 post.save()
 
                 # try:
-                # response = model.predict_by_url(url=uploaded['secure_url'])
+                response = model.predict_by_url(url=uploaded['secure_url'])
 
 
-                # tags = response["outputs"][0]["data"]["concepts"][0]["name"]
-                tags = []
+                tags = response["outputs"][0]["data"]["concepts"][0]["name"]
+
                 post.tags = tags
                 post.save()
 
@@ -231,34 +228,24 @@ def feed(request):
 def feed_main(request):
     # Validates if the user is logged in or not
     user = check_validation(request)
-
+    print '----Feed Main------'
     if user:
-        posts = PostModel.objects.all().order_by('-created_on')
+        posts = PostModel.objects.all().order_by('-created_on','-tags')
+        # posts = PostModel.objects.all().order_by('-tags')
 
         for post in posts:
             existing_like = LikeModel.objects.filter(post_id=post.id, user=user).first()
 
-            url = post.image_url
-            # try:
+            comments = CommentModel.objects.filter(post_id=post.id)
 
-            # response = model.predict_by_url(url=url)
+            if comments:
+                if len(comments)>=1:
+                    for comment in comments:
+                        existing_upvote = UpvoteModel.objects.filter(comment=comment.id).first()
+                        print existing_upvote
 
-            # Categorize on the basis of tags
-            # print response
-            # if post.tags == None:
-            #     for output in response['outputs']:
-            #         print '========================'
-            #
-            #         for concept in output['data']['concepts']:
-            #             print concept['name']
-            #             if post.tags == None:
-            #                 post.tags = str(concept['name'])+' , '
-            #             else:
-            #                 post.tags = str(post.tags)+str(concept['name'])+' , '
-            #             post.save()
-                    # print url
-                # except:
-                #     print 'Api Error'
+                        if existing_upvote:
+                            comment.has_upvoted = True
 
             # If user has liked the post set the boolean value to True
             if existing_like:
@@ -363,3 +350,35 @@ def logout(request):
         return redirect('/')
     else:
         return redirect('/feed/')
+
+
+# Upvote view
+def upvote(request):
+    user = check_validation(request)
+    if user and request.method=='POST':
+        form = UpvoteForm(request.POST)
+
+        if form.is_valid():
+            print 'form valid'
+            comment_id = form.cleaned_data.get('comment').id
+            print comment_id
+            existing_upvote = UpvoteModel.objects.filter(comment_id=comment_id, user=user).first()
+            print existing_upvote
+
+            # If user has already registered an upvote, then delete it
+            if existing_upvote:
+                existing_upvote.delete()
+            else:
+                # Otherwise create an upvote
+                print 'Create Upvote'
+                post = UpvoteModel.objects.create(comment_id=comment_id, user=user)
+                print post
+                print UpvoteModel.objects.filter(comment=comment_id)
+                post.save()
+
+            return redirect('/feed/')
+        else:
+            print 'Form not valid'
+            return redirect('/feed/')
+    else:
+        return redirect('/login/')
