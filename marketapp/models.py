@@ -23,12 +23,7 @@ class SessionToken(models.Model):
     def create_token(self):
         self.session_token = uuid.uuid4()
 
-    def delete(self):
-        d = self.user.id
-        SessionToken.objects.get(id__exact=d).delete()
-        # self.user.id = None
-        self.is_valid = False
-        self.session_token = ''
+    
 
 class PostModel(models.Model):
     user            = models.ForeignKey(UserModel)

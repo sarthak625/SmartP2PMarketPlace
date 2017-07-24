@@ -343,9 +343,9 @@ def comment(request):
 def logout(request):
     user = check_validation(request)
     if user:
-        token = SessionToken(user=user)
-        token.delete()
-        return redirect('/')
+        response = redirect('/')
+        response.delete_cookie(key='session_token')
+        return response
     else:
         return redirect('/feed/')
 
