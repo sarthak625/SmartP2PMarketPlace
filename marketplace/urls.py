@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^login/$',login),
     url(r'^post/$',feed),
     url(r'^feed/$',feed_main),
+    url(r'^feed/(?P<username>[\w.@+-]+)$',func),
     url(r'^like/$',like),
     url(r'^upvote/',upvote),
     url(r'^comment/$',comment),

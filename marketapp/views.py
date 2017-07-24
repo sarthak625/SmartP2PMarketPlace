@@ -259,8 +259,6 @@ def feed_main(request):
         return redirect('/login/')
 
 
-
-
 # Like view
 def like(request):
     user = check_validation(request)
@@ -382,3 +380,39 @@ def upvote(request):
             return redirect('/feed/')
     else:
         return redirect('/login/')
+
+
+def func(request,username):
+    user = check_validation(request)
+    print '----Feed Main------'
+    if user:
+        usern = UserModel.objects.all().filter(username=username)
+        print usern
+        posts = PostModel.objects.all().filter(user=usern).order_by('-created_on','-tags')
+        # posts = PostModel.objects.all().order_by('-tags')
+
+        for post in posts:
+            existing_like = LikeModel.objects.filter(post_id=post.id, user=user).first()
+
+            comments = CommentModel.objects.filter(post_id=post.id)
+
+            if comments:
+                if len(comments)>=1:
+                    for comment in comments:
+                        existing_upvote = UpvoteModel.objects.filter(comment=comment.id).first()
+                        print existing_upvote
+
+                        if existing_upvote:
+                            comment.has_upvoted = True
+
+            # If user has liked the post set the boolean value to True
+            if existing_like:
+                post.has_liked = True
+
+
+        return render(request,'feed_main.html',{
+            'posts': posts
+        })
+    else:
+        return redirect('/login/')
+    return render(request,'hello.html',{'context': username})
