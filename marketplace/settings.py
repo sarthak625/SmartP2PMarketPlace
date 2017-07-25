@@ -84,8 +84,8 @@ DATABASES = {
 }
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'sarthakn18'
-EMAIL_HOST_PASSWORD = 'gots7isawesome'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

@@ -25,6 +25,26 @@ Install the dependencies using:
 
 > pip install requirements.txt
 
+In settings.py, set up the following variables
+
+'''
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = '<YOUR_USERNAME>'
+EMAIL_HOST_PASSWORD = '<YOUR_PASSWORD>'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+'''
+
+Create a KEYS.py with the following variables:
+
+'''
+clarifai_key = '<YOUR_CLARIFAI_KEY>'
+cloudinary_api_key = '<YOUR_CLOUDINARY_KEY>'
+cloudinary_secret  = '<YOUR_CLOUDINARY_AUTH_SECRET>'
+cloudinary_cloud_name = '<YOUR_CLOUD_NAME>'
+'''
+
 Go to the root directory(make sure you have your virtual environment enabled) and run:
 
 > python manage.py runserver

@@ -19,22 +19,21 @@ from clarifai.rest import ClarifaiApp
 import json
 from datetime import datetime
 
-jsonDec = json.decoder.JSONDecoder()
+from KEYS import *
 
 # Set up clarifai and define a model
-app = ClarifaiApp(api_key='a5699f1619f846f49ad15953f6edc724')
+app = ClarifaiApp(api_key=clarifai_key)
 model = app.models.get('general-v1.3')
 
 # Set up cloudinary
 cloudinary.config(
-  cloud_name = "sarthakn",
-  api_key = "262496684599191",
-  api_secret = "W3DeVlkagZImIYWqOggidrGtg2U"
+  cloud_name = cloudinary_cloud_name,
+  api_key = cloudinary_api_key,
+  api_secret = cloudinary_secret
 )
 
 # Set up SendGrid
-sendgrid_key = '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'
-my_client = sendgrid.SendGridAPIClient(apikey=sendgrid_key)
+# my_client = sendgrid.SendGridAPIClient(apikey=sendgrid_key)
 
 def create_payload(subject,message,email):
     from_email = "jsparrow725@gmail.com"
