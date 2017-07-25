@@ -27,7 +27,7 @@ Install the dependencies using:
 
 In settings.py, set up the following variables
 
-```
+```python
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = '<YOUR_USERNAME>'
 EMAIL_HOST_PASSWORD = '<YOUR_PASSWORD>'
@@ -38,7 +38,7 @@ EMAIL_USE_TLS = True
 
 Create a KEYS.py with the following variables:
 
-```
+```python
 clarifai_key = '<YOUR_CLARIFAI_KEY>'
 cloudinary_api_key = '<YOUR_CLOUDINARY_KEY>'
 cloudinary_secret  = '<YOUR_CLOUDINARY_AUTH_SECRET>'
