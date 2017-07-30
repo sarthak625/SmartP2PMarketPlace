@@ -23,7 +23,7 @@ After that clone this repository and set up your own virtual environment.
 
 Install the dependencies using:
 
-> pip install requirements.txt
+> pip install -r requirements.txt
 
 In settings.py, set up the following variables
 
